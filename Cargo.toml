@@ -1,0 +1,31 @@
+[package]
+name = "automatic-garbanzo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "3", features = [ "derive" ] }
+csv-async = { version = "1", features = [ "tokio" ] }
+quickcheck = { version = "1" }
+rust_decimal = { version = "1.24" }
+rusty-money = { version = "0.4" }
+serde = { version = "1.0", features = [ "derive" ] }
+# Even though I don't really need tls, I was hesitant to use rustls over native tls
+# because I wasn't aware of an audit. Since this project is intended to be extensible
+# to something potentially network-bound, it makes sense to consider such a
+# dependency. Luckily, https://github.com/rustls/rustls/issues/189
+# points me to http://jbp.io/2020/06/14/rustls-audit.html, which points to the
+# actual audit report (near the top of the blogpost). The findings are quite
+# good. While native tls may have been audited more (and over more time), my
+# experience with native libraries written in C, even those which see widespread
+# use, is that complex and ugly monsters can lurk for a long time.
+sqlx = { version = "0.5", features = [ "runtime-tokio-rustls", "sqlite" ] }
+tokio = { version = "1", features = [ "full" ] }
+tokio-stream = { version = "0.1" }
+
+[dev-dependencies]
+csv = { version = "1" }
+futures = { version = "0.3" } # needed for quickcheck_async::tokio to work
+quickcheck = { version = "1" }
+quickcheck_macros = { version = "1" }
+quickcheck_async = { version = "0.1" }
